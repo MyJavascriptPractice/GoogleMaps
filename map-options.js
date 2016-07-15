@@ -20,6 +20,21 @@
 		},
 		panControlOptions: {
 			position: google.maps.ControlPosition.LEFT_BOTTOM
+		},
+		cluster: {
+			options: {
+				styles: [{
+					url: "images/m1",
+					height: 56,
+					width: 55,
+					textColor: '#F00',
+					textSize: 18
+				},{
+					url: "images/m2",
+					height: 56,
+					width: 55
+				}]
+			}
 		}
 	};
 }(window, google, window.Mapster || (window.Mapster = {})))
