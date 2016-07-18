@@ -1,14 +1,14 @@
 (function(window, google, mapster) {
 	mapster.MAP_OPTIONS = {
 		center: {
-			lat: 40.5790250,
-			lng: -74.9203500,
+			lat: 37.791350,
+      		lng: -122.435883
 		},
 		zoom: 10,
 	//zoom on scroll
-		scrollwheel: false,
+		scrollwheel: true,
 	//remove zoom slider and other ui elements
-		//disableDefaultUI: true,
+		disableDefaultUI: false,
 	//drag to move map
 		draggable: true,
 	//HYBRID SATElLITE ROADMAP
@@ -21,20 +21,22 @@
 		panControlOptions: {
 			position: google.maps.ControlPosition.LEFT_BOTTOM
 		},
-		cluster: {
-			options: {
-				styles: [{
-					url: "images/m1",
-					height: 56,
-					width: 55,
-					textColor: '#F00',
-					textSize: 18
-				},{
-					url: "images/m2",
-					height: 56,
-					width: 55
-				}]
-			}
-		}
+		cluster: false,
+		//{
+		// 	options: {
+		// 		styles: [{
+		// 			url: '../images/m1.png',
+		// 			height: 56,
+		// 			width: 55,
+		// 			textColor: '#F00',
+		// 			textSize: 18
+		// 		},{
+		// 			url: '../images/m2.png',
+		// 			height: 56,
+		// 			width: 55
+		// 		}]
+		// 	}
+		// },
+		geocode: true
 	};
 }(window, google, window.Mapster || (window.Mapster = {})))

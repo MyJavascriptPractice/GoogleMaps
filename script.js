@@ -1,52 +1,51 @@
-(function(window, mapster) {
+(function(window, $) {
 
-  // map options
-  var options = mapster.MAP_OPTIONS,
-  element = document.getElementById('map-canvas'),
-  // map
-  map = mapster.create(element, options);
+  var $mapster = $('#map-canvas').mapster(Mapster.MAP_OPTIONS)
+  geocoder = new google.maps.Geocoder();
 
-  map.zoom(9);
-
-    var marker2 = map.addMarker({
+  $mapster.mapster('addMarker', {
+    id: 1,
+    location: '717 west sidney rd. pittstown NJ',
+    content: "<div>food is great</div>",
+    draggable: true
+  });
+  $mapster.mapster('addMarker', {
     id: 2,
-    lat: 40.5790250,
-    lng: -74.9203500,
+    content: "<div>food is great</div>",
     draggable: true,
-    content: 'I like rice',
-    icon: 'images/farmstand.png',
-    events: [{
-      name: 'click',
-      callback: function(e, marker) {
-        console.log(e, marker);
-      }
-    },{
-      name: 'dragend',
-      callback: function() {
-        alert('dragged');
-      }
-    }]
+
   });
 
-  // for (var i = 0; i < 40; i++) {
-  //   map.addMarker({
-  //     id: 2,
-  //     lat: 40.5790250 + Math.random(),
-  //     lng: -74.9203500 + Math.random(),
-  //     content: 'I like rice',
-  //     icon: 'images/farmstand.png'
-  //   });
+  $mapster.mapster('setPano', '#pip-pano', {
+    position: {
+      lat: 37.791350,
+      lng: -122.435883
+    }
+  });
 
-  //   var marker = map.addMarker({
-  //     lat: 40.5790250 + Math.random(),
-  //     lng: -74.9203500 + Math.random(),
-  //     content: '<div style="color: #f00;">I like food</div>',
-  //     icon: 'images/drink.png'
-  //   });
-  // }
+  function geocode(opts) {
+    geocoder.geocode({
+      address: opts.address,
+    }, function(results, status) {
+      if (status === google.maps.GeocoderStatus.OK) {
+        opts.success.call(this, results, status);
+      } else {
+        opts.error.call(this, status);
+      }
+    });
+  };
 
-  // map.removeBy(function(marker) {
-  //   return marker.id === 2;
-  // });
-
-}(window, window.Mapster));
+  // geocode({
+  //   address: 'Golden Gate Bridge, San Fransisco, CA',
+  //   success: function(results) {
+  //     var result = results[0];
+  //     $mapster.mapster('addMarker', {
+  //       lat: result.geometry.location.lat(),
+  //       lng: result.geometry.location.lng()
+  //     })
+  //   },
+  //   error: function(status) {
+  //     console.error(status);
+  //   }
+  // })
+}(window, jQuery));
