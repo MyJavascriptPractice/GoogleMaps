@@ -1,12 +1,9 @@
-(function(window, google, List) {
-
+(function(window, google) {
+  
   var Mapster = (function() {
     function Mapster(element, opts) {
       this.gMap = new google.maps.Map(element, opts);
-      this.markers = List.create();
-      if (opts.cluster) {
-        this.markerClusterer = new MarkerClusterer(this.gMap, [], opts.cluster.options);
-      }
+      this.markers = [];
     }
     Mapster.prototype = {
       zoom: function(level) {
@@ -19,24 +16,23 @@
       _on: function(opts) {
         var self = this;
         google.maps.event.addListener(opts.obj, opts.event, function(e) {
-          opts.callback.call(self, e, opts.obj);
+          opts.callback.call(self, e);
         });
       },
       addMarker: function(opts) {
-        var marker,
-          self = this;
-
+        var marker;
         opts.position = {
           lat: opts.lat,
           lng: opts.lng
         }
         marker = this._createMarker(opts);
-        if (this.markerClusterer) {
-          this.markerClusterer.addMarker(marker);
-        }
         this._addMarker(marker);
-        if (opts.events) {
-          this._attachEvents(marker, opts.events);
+        if (opts.event) {
+          this._on({
+            obj: marker,
+            event: opts.event.name,
+            callback: opts.event.callback
+          });
         }
         if (opts.content) {
           this._on({
@@ -46,40 +42,31 @@
               var infoWindow = new google.maps.InfoWindow({
                 content: opts.content
               });
-
+            
               infoWindow.open(this.gMap, marker);
             }
-          })
+          })  
         }
         return marker;
       },
-      _attachEvents: function(obj, events) {
-        var self = this;
-        events.forEach(function(event) {
-          self._on({
-            obj: obj,
-            event: event.name,
-            callback: event.callback
-          });
-        });
-      },
       _addMarker: function(marker) {
-        this.markers.add(marker);
+        this.markers.push(marker);
       },
-      findBy: function(callback) {
-        this.markers.find(callback);
+      _removeMarker: function(marker) {
+        var indexOf = this.markers.indexOf(marker);
+        if (indexOf !== -1) {
+          this.markers.splice(indexOf, 1);
+          marker.setMap(null);
+        }
       },
-      removeBy: function(callback) {
-        var self = this;
-        self.markers.find(callback, function(markers) {
-          markers.forEach(function(marker) {
-            if (self.markerClusterer) {
-              self.markerClusterer.removeMarker(marker);
-            } else {
-              marker.setMap(null);
-            }
-          });
-        });
+      findMarkerByLat: function(lat) {
+        var i = 0;
+        for(; i < this.markers.length; i++) {
+          var marker = this.markers[i];
+          if (marker.position.lat() === lat) {
+            return marker;
+          }
+        }
       },
       _createMarker: function(opts) {
         opts.map = this.gMap;
@@ -88,11 +75,11 @@
     };
     return Mapster;
   }());
-
+  
   Mapster.create = function(element, opts) {
     return new Mapster(element, opts);
   };
-
+  
   window.Mapster = Mapster;
-
-}(window, google, List));
+  
+}(window, google));

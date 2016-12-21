@@ -10,27 +10,14 @@
     scrollwheel: true,
     draggable: true,
     mapTypeId: google.maps.MapTypeId.ROADMAP,
+    maxZoom: 11,
+    minZoom: 9,
     zoomControlOptions: {
       position: google.maps.ControlPosition.LEFT_BOTTOM,
       style: google.maps.ZoomControlStyle.DEFAULT
     },
     panControlOptions: {
       position: google.maps.ControlPosition.LEFT_BOTTOM
-    },
-    cluster: {
-      options: {
-        styles: [{
-          url: 'http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m2.png',
-          height: 56,
-          width: 55,
-          textColor: '#F00',
-          textSize: 18
-        },{
-          url: 'http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/images/m1.png',
-          height: 56,
-          width: 55
-        }]
-      }
     }
   };
   

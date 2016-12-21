@@ -7,6 +7,9 @@
       if (opts.cluster) {
         this.markerClusterer = new MarkerClusterer(this.gMap, [], opts.cluster.options);
       }
+      if (opts.geocoder) {
+        this.geocoder = new google.maps.Geocoder();
+      }
     }
     Mapster.prototype = {
       zoom: function(level) {
@@ -21,6 +24,24 @@
         google.maps.event.addListener(opts.obj, opts.event, function(e) {
           opts.callback.call(self, e, opts.obj);
         });
+      },
+      geocode: function(opts) {
+        this.geocoder.geocode({
+          address: opts.address
+        }, function(results, status) {
+          if (status === google.maps.GeocoderStatus.OK) {
+            opts.success.call(this, results, status);
+          } else {
+            opts.error.call(this, status);
+          }
+        });
+      },
+      setPano: function(element, opts) {
+        var panorama = new google.maps.StreetViewPanorama(element, opts);
+        if (opts.events) {
+          this._attachEvents(panorama, opts.events);
+        }
+        this.gMap.setStreetView(panorama);
       },
       addMarker: function(opts) {
         var marker,
